@@ -1,0 +1,36 @@
+name: Oppdater tilbud
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - server.py
+      - .github/workflows/oppdater.yml
+
+permissions:
+  contents: write
+
+jobs:
+  hent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Hent kundeaviser
+        run: python server.py --snapshot
+      - name: Lagre oppdaterte tilbud
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/offers.json
+          if git diff --staged --quiet; then
+            echo "Ingen endring"
+          else
+            git commit -m "Oppdater godteritilbud"
+            git push
+          fi

@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Godteritilbud under 120 kr fra norske kundeaviser. Virker på mobil.">
+  <meta name="theme-color" content="#1b120d">
+  <title>Godterikupp — tilbud under 120 kr</title>
+  <style>
+    :root {
+      --bg: #1b120d;
+      --bg-2: #2a1b14;
+      --paper: #fff8ef;
+      --ink: #1b120d;
+      --muted: #7a655b;
+      --red: #d0121a;
+      --line: #eadccf;
+      --good: #1f7a45;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #3a241c 0%, transparent 55%),
+        var(--bg);
+      color: #f6efe8;
+      font: 16px/1.45 "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+    .stripe {
+      height: 10px;
+      background: repeating-linear-gradient(
+        90deg,
+        #d0121a 0 18px,
+        #fff8ef 18px 36px
+      );
+    }
+    header, main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 28px 0 8px; }
+    .kicker {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #e7b7a4;
+      margin: 0 0 6px;
+    }
+    h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 0.95;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+    h1 span { color: #ffb4a8; }
+    .lede { max-width: 62ch; color: #e6d5c8; margin: 12px 0 0; }
+    .bar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(27, 18, 13, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 248, 239, 0.08);
+      margin-top: 18px;
+    }
+    .bar-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 12px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+    }
+    label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #e7b7a4; }
+    input, select, button {
+      font: inherit;
+      color: var(--ink);
+      background: var(--paper);
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    input[type="search"] { min-width: 220px; }
+    input[type="number"] { width: 96px; }
+    button {
+      background: var(--red);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.ghost { background: transparent; color: #fff8ef; border: 1px solid rgba(255,248,239,0.3); }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    .stats { display: flex; gap: 18px; flex-wrap: wrap; margin: 18px 0; color: #e6d5c8; }
+    .stats strong { color: white; font-size: 22px; display: block; }
+    .stores { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+    .chip {
+      border: 1px solid rgba(255,248,239,0.2);
+      background: transparent;
+      color: #fff8ef;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .chip.on { background: #fff8ef; color: #1b120d; border-color: #fff8ef; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+      padding-bottom: 48px;
+    }
+    .card {
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    .shot {
+      height: 160px;
+      background: #f3e6d8 center/cover no-repeat;
+      position: relative;
+    }
+    .shot .tag {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: var(--red);
+      color: white;
+      font-weight: 800;
+      font-size: 20px;
+      padding: 6px 8px 4px;
+      border-radius: 6px;
+      transform: rotate(2deg);
+      letter-spacing: -0.03em;
+    }
+    .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .store {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .logo { width: 22px; height: 22px; object-fit: contain; background: white; border-radius: 4px; }
+    h2 { font-size: 17px; line-height: 1.2; margin: 0; }
+    .desc { color: var(--muted); font-size: 13px; margin: 0; min-height: 2.6em; }
+    .meta { margin-top: auto; display: flex; justify-content: space-between; gap: 8px; align-items: end; font-size: 13px; }
+    .before { color: var(--muted); text-decoration: line-through; }
+    .save { color: var(--good); font-weight: 700; }
+    .until { color: #5c463c; }
+    .until.soon { color: var(--red); font-weight: 700; }
+    a.deal {
+      display: inline-block;
+      margin-top: 4px;
+      color: var(--red);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    a.deal:hover { text-decoration: underline; }
+    .status, .empty {
+      padding: 28px 0 40px;
+      color: #e6d5c8;
+    }
+    footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto 28px;
+      color: #b9a396;
+      font-size: 13px;
+    }
+    footer a { color: #ffb4a8; }
+    @media (max-width: 640px) {
+      header, main, footer { width: min(1180px, calc(100% - 16px)); }
+      .bar-inner { width: min(1180px, calc(100% - 16px)); align-items: stretch; }
+      label, input, select, button { width: 100%; }
+      input[type="search"] { min-width: 0; }
+      h1 { font-size: 34px; }
+      .shot { height: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stripe"></div>
+  <header>
+    <p class="kicker">Kundeavisene denne uka</p>
+    <h1>Godteri under <span id="limitLabel">120 kr</span></h1>
+    <p class="lede">Finner gjeldende godteritilbud i norske kundeaviser. Standardgrensen er 120 kr. Pris og utvalg varierer fra butikk til butikk.</p>
+  </header>
+  <div class="bar">
+    <div class="bar-inner">
+      <label>Søk
+        <input id="q" type="search" placeholder="twist, haribo, smågodt…" autocomplete="off">
+      </label>
+      <label>Makspris
+        <input id="max" type="number" min="1" max="400" value="120">
+      </label>
+      <label>Sorter
+        <select id="sort">
+          <option value="price">Laveste pris</option>
+          <option value="save">Størst rabatt</option>
+          <option value="soon">Slutter snart</option>
+          <option value="store">Butikk</option>
+        </select>
+      </label>
+      <button id="apply" type="button">Vis tilbud</button>
+      <button id="refresh" class="ghost" type="button">Oppdater fra avisene</button>
+    </div>
+  </div>
+  <main>
+    <div class="stats" id="stats" hidden></div>
+    <div class="stores" id="stores"></div>
+    <div class="status" id="status">Henter kundeavisene…</div>
+    <div class="grid" id="grid"></div>
+  </main>
+  <footer>
+    Kilde: <a href="https://etilbudsavis.no/soek/godteri" target="_blank" rel="noreferrer">eTilbudsavis</a>.
+    Dette er kundeavistilbud, ikke en hyllepris og ingenting er holdt av.
+    Sist hentet: <span id="when">–</span>
+    <br>
+    Andre nettsteder kan hente <a id="jsonLink" href="data/offers.json">offers.json</a>
+    eller bygge inn siden i en iframe.
+  </footer>
+  <script src="godteri.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let all = [];
+    let storeFilter = new Set();
+    let pollTimer = null;
+
+    function kroner(n) {
+      if (n == null) return "";
+      const v = Number(n);
+      return (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(".", ",")) + " kr";
+    }
+
+    function statBox(value, label) {
+      const box = document.createElement("div");
+      const strong = document.createElement("strong");
+      strong.textContent = value;
+      box.append(strong, document.createTextNode(label));
+      return box;
+    }
+
+    function whenLabel(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      return d.toLocaleString("nb-NO", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function untilLabel(iso) {
+      if (!iso) return { text: "dato ukjent", soon: false };
+      const d = new Date(iso);
+      const now = new Date();
+      const end = new Date(d);
+      const days = Math.ceil((end - now) / 86400000);
+      const text = "til " + d.toLocaleDateString("nb-NO", { weekday: "short", day: "numeric", month: "short" });
+      return { text, soon: days <= 2 };
+    }
+
+    function matches(o) {
+      const max = Number($("max").value || 120);
+      if (!(o.price < max)) return false;
+      if (storeFilter.size && !storeFilter.has(o.store)) return false;
+      const q = $("q").value.trim().toLowerCase();
+      if (!q) return true;
+      const hay = (o.name + " " + o.store + " " + o.description).toLowerCase();
+      return q.split(/\s+/).every((part) => hay.includes(part));
+    }
+
+    function sortOffers(rows) {
+      const mode = $("sort").value;
+      const copy = rows.slice();
+      if (mode === "save") {
+        copy.sort((a, b) => (b.savings || 0) - (a.savings || 0) || a.price - b.price);
+      } else if (mode === "soon") {
+        copy.sort((a, b) => new Date(a.valid_until || 0) - new Date(b.valid_until || 0));
+      } else if (mode === "store") {
+        copy.sort((a, b) => a.store.localeCompare(b.store, "nb") || a.price - b.price);
+      } else {
+        copy.sort((a, b) => a.price - b.price || a.name.localeCompare(b.name, "nb"));
+      }
+      return copy;
+    }
+
+    function renderStores(rows) {
+      const counts = new Map();
+      const max = Number($("max").value || 120);
+      const q = $("q").value.trim().toLowerCase();
+      for (const o of all) {
+        if (!(o.price < max)) continue;
+        if (q) {
+          const hay = (o.name + " " + o.store + " " + o.description).toLowerCase();
+          if (!q.split(/\s+/).every((part) => hay.includes(part))) continue;
+        }
+        counts.set(o.store, (counts.get(o.store) || 0) + 1);
+      }
+      const names = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a) || a.localeCompare(b, "nb"));
+      const box = $("stores");
+      box.innerHTML = "";
+      const allChip = document.createElement("button");
+      allChip.className = "chip" + (storeFilter.size ? "" : " on");
+      allChip.type = "button";
+      allChip.textContent = "Alle butikker";
+      allChip.onclick = () => { storeFilter = new Set(); render(); };
+      box.appendChild(allChip);
+      for (const name of names) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip" + (storeFilter.has(name) ? " on" : "");
+        b.textContent = name + " (" + counts.get(name) + ")";
+        b.onclick = () => {
+          if (storeFilter.has(name)) storeFilter.delete(name);
+          else storeFilter.add(name);
+          render();
+        };
+        box.appendChild(b);
+      }
+    }
+
+    function card(o) {
+      const el = document.createElement("article");
+      el.className = "card";
+      const until = untilLabel(o.valid_until);
+      const shot = document.createElement("div");
+      shot.className = "shot";
+      if (o.image) shot.style.backgroundImage = "url('" + o.image.replace(/'/g, "%27") + "')";
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.textContent = kroner(o.price);
+      shot.appendChild(tag);
+      const body = document.createElement("div");
+      body.className = "body";
+      const store = document.createElement("div");
+      store.className = "store";
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      dot.style.background = o.color || "#6b3a2a";
+      store.appendChild(dot);
+      store.appendChild(document.createTextNode(o.store));
+      const h = document.createElement("h2");
+      h.textContent = o.name;
+      const desc = document.createElement("p");
+      desc.className = "desc";
+      desc.textContent = o.description || "";
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      const left = document.createElement("div");
+      if (o.before) {
+        const before = document.createElement("div");
+        before.className = "before";
+        before.textContent = "før " + kroner(o.before);
+        left.appendChild(before);
+      }
+      if (o.savings) {
+        const save = document.createElement("div");
+        save.className = "save";
+        save.textContent = "spar " + kroner(o.savings);
+        left.appendChild(save);
+      }
+      const right = document.createElement("div");
+      right.className = "until" + (until.soon ? " soon" : "");
+      right.textContent = until.text;
+      meta.appendChild(left);
+      meta.appendChild(right);
+      const a = document.createElement("a");
+      a.className = "deal";
+      a.href = o.url;
+      a.target = "_blank";
+      a.rel = "noreferrer";
+      a.textContent = "Åpne i eTilbudsavis";
+      body.append(store, h, desc, meta, a);
+      el.append(shot, body);
+      return el;
+    }
+
+    function render() {
+      const max = Number($("max").value || 120);
+      $("limitLabel").textContent = max + " kr";
+      const rows = sortOffers(all.filter(matches));
+      renderStores(rows);
+      const grid = $("grid");
+      grid.innerHTML = "";
+      const status = $("status");
+      if (!all.length) {
+        status.hidden = false;
+        status.textContent = "Ingen tilbud lastet ennå.";
+        $("stats").hidden = true;
+        return;
+      }
+      status.hidden = true;
+      const stats = $("stats");
+      stats.hidden = false;
+      const cheapest = rows.length ? Math.min(...rows.map((o) => o.price)) : null;
+      stats.replaceChildren(
+        statBox(String(rows.length), "tilbud"),
+        statBox(cheapest == null ? "–" : kroner(cheapest), "billigst"),
+        statBox(String(new Set(rows.map((o) => o.store)).size), "butikker")
+      );
+      if (!rows.length) {
+        status.hidden = false;
+        status.textContent = "Ingen godteritilbud under " + max + " kr med det filteret.";
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      for (const o of rows) frag.appendChild(card(o));
+      grid.appendChild(frag);
+    }
+
+    function applyData(data) {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+      all = data.offers || [];
+      $("when").textContent = whenLabel(data.fetched_at);
+      $("refresh").disabled = false;
+      if (data.error) {
+        $("status").hidden = false;
+        $("status").textContent = "Viser sist lagrede tilbud. Ny henting feilet: " + data.error;
+      }
+      render();
+    }
+
+    async function loadSnapshot() {
+      const res = await fetch("data/offers.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("fant ikke data/offers.json");
+      const data = await res.json();
+      data.ready = true;
+      return data;
+    }
+
+    async function load() {
+      try {
+        const res = await fetch("api/tilbud", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ready && (data.offers || []).length) {
+            applyData(data);
+            return;
+          }
+          if (!data.ready && data.loading) {
+            $("status").hidden = false;
+            $("status").textContent = data.error || "Henter kundeavisene…";
+            if (!pollTimer) pollTimer = setInterval(load, 1500);
+            return;
+          }
+        }
+      } catch (err) {
+        /* GitHub Pages har ikke lokal API. Snapshot under. */
+      }
+      try {
+        applyData(await loadSnapshot());
+      } catch (err) {
+        $("status").hidden = false;
+        $("status").textContent = "Fant ingen tilbud. Prøv Oppdater fra avisene.";
+      }
+    }
+
+    $("apply").onclick = render;
+    $("q").addEventListener("keydown", (e) => { if (e.key === "Enter") render(); });
+    $("max").addEventListener("change", render);
+    $("sort").addEventListener("change", render);
+    $("refresh").onclick = async () => {
+      $("refresh").disabled = true;
+      $("status").hidden = false;
+      $("status").textContent = "Oppdaterer fra kundeavisene…";
+      try {
+        const probe = await fetch("api/refresh", { cache: "no-store" });
+        if (probe.ok || probe.status === 202) {
+          if (pollTimer) clearInterval(pollTimer);
+          pollTimer = setInterval(load, 1500);
+          return;
+        }
+      } catch (err) {
+        /* ingen lokal server */
+      }
+      try {
+        const offers = await GodteriKupp.hent();
+        applyData({ offers: offers, fetched_at: new Date().toISOString(), ready: true });
+        $("status").hidden = true;
+      } catch (err) {
+        $("status").hidden = false;
+        $("status").textContent = "Klarte ikke å oppdatere: " + err.message;
+        $("refresh").disabled = false;
+      }
+    };
+    load();
+  </script>
+</body>
+</html>
