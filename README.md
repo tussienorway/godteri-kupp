@@ -11,7 +11,7 @@ Prisene kommer fra [eTilbudsavis](https://etilbudsavis.no/soek/godteri). Det er 
 JSON, med CORS, så `fetch` virker fra andre domener:
 
 ```
-https://cdn.jsdelivr.net/gh/tussienorway/godteri-kupp@main/data/offers.json
+https://tussienorway.github.io/godteri-kupp/data/offers.json
 ```
 
 Ferske tilbud rett i nettleseren, uten egen server. Scriptet er vårt eget og endres med repoet, derfor er det ingen fast integrity-hash:
